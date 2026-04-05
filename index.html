@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>spark - Performance Profiler</title>
+    <style>
+        :root {
+            --bg-color: #12151a;
+            --card-bg: #1c212a;
+            --card-border: #2b323c;
+            --text-main: #e6edf3;
+            --text-muted: #8b949e;
+            --brand-yellow: #fbbc05;
+            --brand-orange: #ff7b52;
+            --link-color: #ff8a65;
+            --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 760px;
+            width: 100%;
+        }
+
+        /* --- Header Section --- */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 15px;
+        }
+
+        .logo-box {
+            width: 80px;
+            height: 80px;
+            background-color: var(--brand-yellow);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-box svg {
+            fill: var(--bg-color);
+            width: 45px;
+            height: 45px;
+            transform: rotate(10deg);
+        }
+
+        h1 {
+            font-size: 5rem;
+            margin: 0;
+            letter-spacing: -1px;
+            background: linear-gradient(90deg, var(--brand-yellow), var(--brand-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* --- Cards --- */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 4px;
+            margin-bottom: 15px;
+            padding: 15px 25px;
+        }
+
+        /* --- Downloads Link --- */
+        .download-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: background-color 0.2s;
+        }
+
+        .download-link:hover {
+            background-color: #232934;
+        }
+
+        .download-link .link-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .download-link h2 {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .download-link p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin: 0;
+            flex: 1;
+            text-align: right;
+        }
+
+        /* --- About Section --- */
+        .about-card {
+            padding: 25px;
+            margin-top: 25px;
+        }
+
+        .section-header {
+            font-size: 1.3rem;
+            margin: 0 0 15px 0;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hash {
+            color: var(--brand-yellow);
+        }
+
+        .intro-text {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .feature-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.6;
+        }
+
+        .feature-icon svg {
+            width: 36px;
+            height: 36px;
+            stroke: var(--text-muted);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .feature-content h3 {
+            color: var(--brand-yellow);
+            font-size: 0.9rem;
+            margin: 0 0 5px 0;
+        }
+
+        .feature-content p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .footer-text {
+            margin-top: 35px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer-text a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo-container">
+            <div class="logo-box">
+                <svg viewBox="0 0 24 24">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
+                </svg>
+            </div>
+            <h1>spark</h1>
+        </div>
+        <p class="subtitle">A performance profiler for Minecraft clients, servers, and proxies.</p>
+    </header>
+
+    <main>
+        <a href="#" class="card download-link">
+            <div class="link-left">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--link-color)">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-5h2v5zm0-7h-2V7h2v2z"/>
+                    <path d="M16 13l-4 4-4-4h3V9h2v4h3z" fill="var(--bg-color)" stroke="var(--bg-color)" stroke-width="1"/>
+                </svg>
+                <h2>Downloads</h2>
+            </div>
+            <p>Download the latest version of spark.</p>
+        </a>
+
+        <div class="card about-card">
+            <h2 class="section-header"><span class="hash">#</span> About</h2>
+            <p class="intro-text">spark is a performance profiler, made up of three main components.</p>
+            
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                            <rect x="9" y="9" width="6" height="6"></rect>
+                            <line x1="9" y1="1" x2="9" y2="4"></line>
+                            <line x1="15" y1="1" x2="15" y2="4"></line>
+                            <line x1="9" y1="20" x2="9" y2="23"></line>
+                            <line x1="15" y1="20" x2="15" y2="23"></line>
+                            <line x1="20" y1="9" x2="23" y2="9"></line>
+                            <line x1="20" y1="14" x2="23" y2="14"></line>
+                            <line x1="1" y1="9" x2="4" y2="9"></line>
+                            <line x1="1" y1="14" x2="4" y2="14"></line>
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Profiler</h3>
+                        <p>spark can help to diagnose performance problems and bottlenecks with its built-in profiler.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect>
+                            <line x1="6" y1="17" x2="6" y2="19"></line>
+                            <line x1="10" y1="17" x2="10" y2="19"></line>
+                            <line x1="14" y1="17" x2="14" y2="19"></line>
+                            <line x1="18" y1="17" x2="18" y2="19"></line>
+                            <line x1="6" y1="5" x2="6" y2="7"></line>
+                            <line x1="10" y1="5" x2="10" y2="7"></line>
+                            <line x1="14" y1="5" x2="14" y2="7"></line>
+                            <line x1="18" y1="5" x2="18" y2="7"></line>
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Memory Inspection</h3>
+                        <p>spark can produce full heap dumps, present a summary of what's using the most memory, and monitor GC activity.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            <polyline points="3 12 8 12 10 8 14 16 16 12 21 12" stroke-width="2" stroke="var(--bg-color)" fill="none" opacity="0.8"></polyline>
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Health Reporting</h3>
+                        <p>spark monitors and reports a number of key metrics which are useful for tracking performance over time.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="footer-text">More information about spark can be found on <a href="#">GitHub</a>, or you can come chat with us on <a href="#">Discord</a>.</p>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>
